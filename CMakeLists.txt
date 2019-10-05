@@ -18,24 +18,5 @@ include_directories(
     ${OpenCV_INCLUDE_DIRS}
     ${EIGEN_ROOT_DIR})
 
-qt5_wrap_cpp(MAIN_WINDOW_SRCS
-    mainwindow.h
-    image_widget.h)
-qt5_wrap_ui(MAIN_WINDOW_UI
-    mainwindow.ui)
-qt5_add_resources(MAIN_WINDOW_RCCS mainwindow.qrc)
-
-file(GLOB _SRCS *.cpp)
-
-add_executable(${PROJECT_NAME}
-    ${_SRCS}
-    ${MAIN_WINDOW_RCCS}
-    ${MAIN_WINDOW_UI}
-    ${MAIN_WINDOW_SRCS})
-
-target_link_libraries(${PROJECT_NAME}
-    Qt5::Widgets
-    ${OpenCV_LIBS}
-    image_warping)
-
 add_subdirectory(image_warping)
+add_subdirectory(image_warping_gui)
