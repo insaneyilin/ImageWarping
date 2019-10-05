@@ -80,7 +80,7 @@ float RBFImageWarping::CalcMinRadius(int i) {
   float min_dist = std::numeric_limits<float>::max();
   const int num_ctrl_pts = source_points_.size();
   if (source_points_.size() <= 1) {
-    return 1.f;
+    return 0.f;
   }
   for (int j = 0; j < num_ctrl_pts; ++j) {
     if (i == j) {
@@ -96,6 +96,9 @@ float RBFImageWarping::CalcMinRadius(int i) {
 
 void RBFImageWarping::SolveLinearSystem() {
   const int num_ctrl_pts = source_points_.size();
+  if (num_ctrl_pts == 0) {
+    return;
+  }
   coeff_mat_.resize(num_ctrl_pts, num_ctrl_pts);
   alpha_x_vec_.resize(num_ctrl_pts);
   alpha_y_vec_.resize(num_ctrl_pts);
@@ -111,6 +114,12 @@ void RBFImageWarping::SolveLinearSystem() {
   }
   alpha_x_vec_ = coeff_mat_.colPivHouseholderQr().solve(diff_x_vec_);
   alpha_y_vec_ = coeff_mat_.colPivHouseholderQr().solve(diff_y_vec_);
+  // special handling if there is only one pair of ctrl points
+  if (num_ctrl_pts == 1) {
+    const float coeff = coeff_mat_(0, 0) + 1e-5f;
+    alpha_x_vec_(0) = diff_x_vec_(0) / coeff;
+    alpha_y_vec_(0) = diff_y_vec_(0) / coeff;
+  }
   alpha_x_list_.clear();
   alpha_y_list_.clear();
   for (int i = 0; i < num_ctrl_pts; ++i) {
