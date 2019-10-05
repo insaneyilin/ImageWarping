@@ -6,8 +6,10 @@
 #define BASE_IMAGE_WARPING_H_
 
 #include <vector>
+#include <memory>
 #include <Eigen/Dense>
 #include <opencv2/core/core.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 
 namespace image_warping {
 
@@ -20,6 +22,8 @@ class BaseImageWarping {
       const std::vector<Eigen::Vector2f> &tgt_pts);
 
   void WarpImage(cv::Mat *image);
+
+  void WarpImageWithTriangulation(cv::Mat *image);
 
   virtual std::string Name() const {
     return "BaseImageWarping";
@@ -39,12 +43,22 @@ class BaseImageWarping {
 
   virtual void SolveTransformations() = 0;
 
+  void GenerateRandomKeyPointsAndDoTriangulation(int width, int height);
+
+  void GetBarycentricCoordinates(const Eigen::Vector2f &p1,
+      const Eigen::Vector2f &p2, const Eigen::Vector2f &p3,
+      const Eigen::Vector2f &p, Eigen::Vector3f *bc_coords);
+
  protected:
   std::vector<Eigen::Vector2f> source_points_;
   std::vector<Eigen::Vector2f> target_points_;
   // paint_mask_[i][j] = 1 means pixel (i, j) is painted, else in 'hole'
   std::vector<std::vector<int> > paint_mask_;
   cv::Mat image_mat_backup_;
+
+  std::vector<Eigen::Vector2f> keypoints_;
+  std::vector<Eigen::Vector2f> transformed_keypoints_;
+  std::shared_ptr<cv::Subdiv2D> subdiv_2d_;
 };
 
 }  // namespace image_warping

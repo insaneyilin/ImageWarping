@@ -85,6 +85,7 @@ void ImageWidget::mouseMoveEvent(QMouseEvent *mouseevent) {
       image_warping_ = warping_inst_map_[warping_method_].get();
       image_warping_->SetAnchorPoints(src_pts, tgt_pts);
       image_warping_->WarpImage(&image_mat_);
+      // image_warping_->WarpImageWithTriangulation(&image_mat_);
     }
 
     update();
@@ -213,6 +214,7 @@ void ImageWidget::Warp() {
   image_warping_ = warping_inst_map_[warping_method_].get();
   image_warping_->SetAnchorPoints(source_points_, target_points_);
   image_warping_->WarpImage(&image_mat_);
+  // image_warping_->WarpImageWithTriangulation(&image_mat_);
 
   update();
 }
