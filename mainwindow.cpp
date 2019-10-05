@@ -89,6 +89,21 @@ void MainWindow::CreateActions() {
   action_do_warp_ = new QAction(tr("Warp"), this);
   action_do_warp_->setStatusTip(tr("Warp Image"));
   connect(action_do_warp_, SIGNAL(triggered()), imagewidget_, SLOT(Warp()));
+
+  action_use_idw_warping_ = new QAction(tr("IDW warping"), this);
+  action_use_idw_warping_->setStatusTip(tr("Inverse Distance Weighted"));
+
+  action_use_rbf_warping_ = new QAction(tr("RBF warping"), this);
+  action_use_rbf_warping_->setStatusTip(tr("Radial Basis Function"));
+
+  action_grp_warping_method_ = new QActionGroup(this);
+  action_grp_warping_method_->addAction(action_use_idw_warping_);
+  action_grp_warping_method_->addAction(action_use_rbf_warping_);
+  connect(action_grp_warping_method_, SIGNAL(triggered(QAction*)),
+      this, SLOT(ChangeWarpingMethod(QAction*)));
+
+  action_use_rbf_warping_->setCheckable(true);
+  action_use_rbf_warping_->setChecked(true);
 }
 
 void MainWindow::CreateMenus() {
@@ -111,6 +126,9 @@ void MainWindow::CreateMenus() {
   menu_image_warping_->addAction(action_select_points_);
   menu_image_warping_->addAction(action_undo_select_);
   menu_image_warping_->addAction(action_do_warp_);
+  submenu_warping_method_ = menu_image_warping_->addMenu(tr("Warping Method"));
+  submenu_warping_method_->addAction(action_use_idw_warping_);
+  submenu_warping_method_->addAction(action_use_rbf_warping_);
 }
 
 void MainWindow::CreateToolBars() {
@@ -129,6 +147,9 @@ void MainWindow::CreateToolBars() {
   toolbar_image_warping_->addAction(action_select_points_);
   toolbar_image_warping_->addAction(action_undo_select_);
   toolbar_image_warping_->addAction(action_do_warp_);
+  toolbar_image_warping_->addSeparator();
+  toolbar_image_warping_->addAction(action_use_idw_warping_);
+  toolbar_image_warping_->addAction(action_use_rbf_warping_);
 }
 
 void MainWindow::CreateStatusBar() {
@@ -139,5 +160,16 @@ void MainWindow::ChangeSelectPointsMode() {
   if (action_select_points_) {
     bool is_checked = action_select_points_->isChecked();
     imagewidget_->SetSelectMode(is_checked);
+  }
+}
+
+void MainWindow::ChangeWarpingMethod(QAction *a) {
+  a->setCheckable(true);
+  a->setChecked(true);
+
+  if (action_use_idw_warping_->isChecked()) {
+    imagewidget_->SetWarpingMethod("IDW");
+  } else if (action_use_rbf_warping_->isChecked()) {
+    imagewidget_->SetWarpingMethod("RBF");
   }
 }

@@ -63,6 +63,10 @@ class ImageWidget : public QWidget {
 
   void SetSelectMode(bool status);
 
+  void SetWarpingMethod(const std::string &name) {
+    warping_method_ = name;
+  }
+
  private:
   void InitWarpingInstanceMap();
 
@@ -83,7 +87,7 @@ class ImageWidget : public QWidget {
   // warping method name ("IDW"/"RBF") -> warping instance
   std::unordered_map<std::string,
       std::shared_ptr<image_warping::BaseImageWarping>> warping_inst_map_;
-  std::string warping_method_ = "RBF";
+  std::string warping_method_ = "IDW";
   image_warping::BaseImageWarping *image_warping_ = nullptr;
 };
 

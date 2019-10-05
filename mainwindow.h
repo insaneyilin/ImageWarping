@@ -10,6 +10,7 @@
 
 QT_BEGIN_NAMESPACE
 class QAction;
+class QActionGroup;
 class QMenu;
 class ViewWidget;
 class QImage;
@@ -31,6 +32,7 @@ class MainWindow : public QMainWindow {
 
  private slots:
   void ChangeSelectPointsMode();
+  void ChangeWarpingMethod(QAction *a);
 
  private:
   void CreateActions();
@@ -45,6 +47,7 @@ class MainWindow : public QMainWindow {
   QMenu *menu_edit_;
   QMenu *menu_help_;
   QMenu *menu_image_warping_;
+  QMenu *submenu_warping_method_;
 
   QToolBar *toolbar_file_;
   QToolBar *toolbar_edit_;
@@ -63,6 +66,10 @@ class MainWindow : public QMainWindow {
   QAction *action_select_points_;
   QAction *action_undo_select_;
   QAction *action_do_warp_;
+
+  QActionGroup *action_grp_warping_method_;
+  QAction *action_use_idw_warping_;
+  QAction *action_use_rbf_warping_;
 
   ImageWidget *imagewidget_;
 };

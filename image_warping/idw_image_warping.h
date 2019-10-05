@@ -28,6 +28,14 @@ class IDWImageWarping : public BaseImageWarping {
  protected:
   virtual Eigen::Vector2f GetTransformedPoint(
       const Eigen::Vector2f &pt) override;
+
+ private:
+  void CalcWeights(const Eigen::Vector2f &pt);
+  void SolveOptimalLocalTransformations();
+
+ private:
+  std::vector<float> weights_;
+  std::vector<Eigen::Matrix2f> local_trans_mat_list_;
 };
 
 }  // namespace image_warping

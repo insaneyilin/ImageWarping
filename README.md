@@ -1,6 +1,6 @@
 # ImageWarping
 
-C++ Implementation of some Image warping algorithms.
+C++ Implementation of some image warping algorithms using control points.
 
 ## Dependencies
 
@@ -28,5 +28,14 @@ make
 
 ## Todo
 
-- [x] Implement Radial Basis Function warping
-- [ ] Inverse Distance Weighted warping
+- [x] Implement Radial Basis Functions warping
+- [x] Implement Inverse Distance Weighted warping
+- [ ] Add technical report
+
+---
+
+## Reference
+
+Detlef Ruprecht and Heinrich Müller. Image warping with scattered data interpolation. IEEE Computer Graphics and Applications, 1995.
+
+Nur Arad and Daniel Reisfeld. Image Warping Using Few Anchor Points and Radial Functions. Computer Graphics Forum, 14(1): 35-46, 1995.
