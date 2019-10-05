@@ -19,8 +19,6 @@ class RBFImageWarping : public BaseImageWarping {
   RBFImageWarping();
   virtual ~RBFImageWarping();
 
-  virtual void WarpImage(cv::Mat *image) override;
-
   virtual std::string Name() const override {
     return "RBFImageWarping";
   }
@@ -28,6 +26,7 @@ class RBFImageWarping : public BaseImageWarping {
  protected:
   virtual Eigen::Vector2f GetTransformedPoint(
       const Eigen::Vector2f &pt) override;
+  virtual void SolveTransformations() override;
 
  private:
   float HardyMultiQuadricFunction(float distance, int i);

@@ -19,8 +19,6 @@ class IDWImageWarping : public BaseImageWarping {
   IDWImageWarping();
   virtual ~IDWImageWarping();
 
-  virtual void WarpImage(cv::Mat *image) override;
-
   virtual std::string Name() const override {
     return "IDWImageWarping";
   }
@@ -28,6 +26,7 @@ class IDWImageWarping : public BaseImageWarping {
  protected:
   virtual Eigen::Vector2f GetTransformedPoint(
       const Eigen::Vector2f &pt) override;
+  virtual void SolveTransformations() override;
 
  private:
   void CalcWeights(const Eigen::Vector2f &pt);

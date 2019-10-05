@@ -32,6 +32,7 @@ class MainWindow : public QMainWindow {
 
  private slots:
   void ChangeSelectPointsMode();
+  void ChangeRealtimeWarpingMode();
   void ChangeWarpingMethod(QAction *a);
 
  private:
@@ -70,6 +71,7 @@ class MainWindow : public QMainWindow {
   QActionGroup *action_grp_warping_method_;
   QAction *action_use_idw_warping_;
   QAction *action_use_rbf_warping_;
+  QAction *action_real_time_warping_mode_;
 
   ImageWidget *imagewidget_;
 };

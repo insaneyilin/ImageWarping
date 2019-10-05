@@ -71,6 +71,22 @@ void ImageWidget::mousePressEvent(QMouseEvent *mouseevent) {
 void ImageWidget::mouseMoveEvent(QMouseEvent *mouseevent) {
   if (select_mode_ && is_drawing_) {
     point_end_ = mouseevent->pos();
+
+    if (realtime_warping_mode_) {
+      std::vector<Eigen::Vector2f> src_pts = source_points_;
+      std::vector<Eigen::Vector2f> tgt_pts = target_points_;
+      Eigen::Vector2f pt;
+      pt[0] = point_start_.x();
+      pt[1] = point_start_.y();
+      src_pts.push_back(pt);
+      pt[0] = point_end_.x();
+      pt[1] = point_end_.y();
+      tgt_pts.push_back(pt);
+      image_warping_ = warping_inst_map_[warping_method_].get();
+      image_warping_->SetAnchorPoints(src_pts, tgt_pts);
+      image_warping_->WarpImage(&image_mat_);
+    }
+
     update();
   }
 }

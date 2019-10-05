@@ -104,6 +104,14 @@ void MainWindow::CreateActions() {
 
   action_use_rbf_warping_->setCheckable(true);
   action_use_rbf_warping_->setChecked(true);
+  imagewidget_->SetWarpingMethod("RBF");
+
+  action_real_time_warping_mode_ = new QAction(tr("Realtime Warping"), this);
+  action_real_time_warping_mode_->setStatusTip(tr("Realtime Warping"));
+  action_real_time_warping_mode_->setCheckable(true);
+  action_real_time_warping_mode_->setChecked(false);
+  connect(action_real_time_warping_mode_, SIGNAL(triggered()), this,
+      SLOT(ChangeRealtimeWarpingMode()));
 }
 
 void MainWindow::CreateMenus() {
@@ -126,6 +134,7 @@ void MainWindow::CreateMenus() {
   menu_image_warping_->addAction(action_select_points_);
   menu_image_warping_->addAction(action_undo_select_);
   menu_image_warping_->addAction(action_do_warp_);
+  menu_image_warping_->addAction(action_real_time_warping_mode_);
   submenu_warping_method_ = menu_image_warping_->addMenu(tr("Warping Method"));
   submenu_warping_method_->addAction(action_use_idw_warping_);
   submenu_warping_method_->addAction(action_use_rbf_warping_);
@@ -147,6 +156,7 @@ void MainWindow::CreateToolBars() {
   toolbar_image_warping_->addAction(action_select_points_);
   toolbar_image_warping_->addAction(action_undo_select_);
   toolbar_image_warping_->addAction(action_do_warp_);
+  toolbar_image_warping_->addAction(action_real_time_warping_mode_);
   toolbar_image_warping_->addSeparator();
   toolbar_image_warping_->addAction(action_use_idw_warping_);
   toolbar_image_warping_->addAction(action_use_rbf_warping_);
@@ -160,6 +170,13 @@ void MainWindow::ChangeSelectPointsMode() {
   if (action_select_points_) {
     bool is_checked = action_select_points_->isChecked();
     imagewidget_->SetSelectMode(is_checked);
+  }
+}
+
+void MainWindow::ChangeRealtimeWarpingMode() {
+  if (action_real_time_warping_mode_) {
+    bool is_checked = action_real_time_warping_mode_->isChecked();
+    imagewidget_->SetRealTimeWarpingMode(is_checked);
   }
 }
 

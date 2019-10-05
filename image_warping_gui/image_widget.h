@@ -67,6 +67,10 @@ class ImageWidget : public QWidget {
     warping_method_ = name;
   }
 
+  void SetRealTimeWarpingMode(bool status) {
+    realtime_warping_mode_ = status;
+  }
+
  private:
   void InitWarpingInstanceMap();
 
@@ -77,6 +81,7 @@ class ImageWidget : public QWidget {
 
   bool is_drawing_ = false;
   bool select_mode_ = false;
+  bool realtime_warping_mode_ = false;
 
   QPoint point_start_;
   QPoint point_end_;

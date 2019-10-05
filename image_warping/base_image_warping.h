@@ -19,7 +19,7 @@ class BaseImageWarping {
   void SetAnchorPoints(const std::vector<Eigen::Vector2f> &src_pts,
       const std::vector<Eigen::Vector2f> &tgt_pts);
 
-  virtual void WarpImage(cv::Mat *image) = 0;
+  void WarpImage(cv::Mat *image);
 
   virtual std::string Name() const {
     return "BaseImageWarping";
@@ -36,6 +36,8 @@ class BaseImageWarping {
     int y = static_cast<int>(pt[1]);
     return x >= 0 && x < width && y >= 0 && y < height;
   }
+
+  virtual void SolveTransformations() = 0;
 
  protected:
   std::vector<Eigen::Vector2f> source_points_;

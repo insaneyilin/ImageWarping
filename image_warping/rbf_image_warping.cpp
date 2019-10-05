@@ -16,44 +16,6 @@ RBFImageWarping::RBFImageWarping() {
 RBFImageWarping::~RBFImageWarping() {
 }
 
-void RBFImageWarping::WarpImage(cv::Mat *image) {
-  const int width = image->cols;
-  const int height = image->rows;
-
-  // get min radius list
-  min_radius_list_.clear();
-  for (int i = 0; i < source_points_.size(); ++i) {
-    min_radius_list_.push_back(CalcMinRadius(i));
-  }
-
-  // solve linear system to get coeffs
-  SolveLinearSystem();
-
-  paint_mask_.clear();
-  paint_mask_.resize(height, std::vector<int>(width, 0));
-  image_mat_backup_ = image->clone();
-  image->setTo(cv::Scalar(255, 255, 255));
-
-  Eigen::Vector2f pt;
-  Eigen::Vector2f trans_pt;
-  for (int i = 0; i < height; ++i) {
-    for (int j = 0; j < width; ++j) {
-      pt[0] = j;
-      pt[1] = i;
-      trans_pt = GetTransformedPoint(pt);
-      if (!IsValidImagePoint(trans_pt, width, height)) {
-        continue;
-      }
-      int trans_x = static_cast<int>(trans_pt[0]);
-      int trans_y = static_cast<int>(trans_pt[1]);
-      image->at<cv::Vec3b>(trans_y, trans_x) =
-          image_mat_backup_.at<cv::Vec3b>(i, j);
-      paint_mask_[trans_y][trans_x] = 1;
-    }
-  }
-  FillHole(image);
-}
-
 Eigen::Vector2f RBFImageWarping::GetTransformedPoint(
     const Eigen::Vector2f &pt) {
   const int num_ctrl_pts = source_points_.size();
@@ -69,6 +31,17 @@ Eigen::Vector2f RBFImageWarping::GetTransformedPoint(
   trans_pt[0] += pt[0];
   trans_pt[1] += pt[1];
   return trans_pt;
+}
+
+void RBFImageWarping::SolveTransformations() {
+  // get min radius list
+  min_radius_list_.clear();
+  for (int i = 0; i < source_points_.size(); ++i) {
+    min_radius_list_.push_back(CalcMinRadius(i));
+  }
+
+  // solve linear system to get coeffs
+  SolveLinearSystem();
 }
 
 float RBFImageWarping::HardyMultiQuadricFunction(float distance, int i) {

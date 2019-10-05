@@ -25,6 +25,37 @@ void BaseImageWarping::SetAnchorPoints(
   source_points_.assign(src_pts.begin(), src_pts.end());
   target_points_.clear();
   target_points_.assign(tgt_pts.begin(), tgt_pts.end());
+
+  SolveTransformations();
+}
+
+void BaseImageWarping::WarpImage(cv::Mat *image) {
+  const int width = image->cols;
+  const int height = image->rows;
+
+  paint_mask_.clear();
+  paint_mask_.resize(height, std::vector<int>(width, 0));
+  image_mat_backup_ = image->clone();
+  image->setTo(cv::Scalar(255, 255, 255));
+
+  Eigen::Vector2f pt;
+  Eigen::Vector2f trans_pt;
+  for (int i = 0; i < height; ++i) {
+    for (int j = 0; j < width; ++j) {
+      pt[0] = j;
+      pt[1] = i;
+      trans_pt = GetTransformedPoint(pt);
+      if (!IsValidImagePoint(trans_pt, width, height)) {
+        continue;
+      }
+      int trans_x = static_cast<int>(trans_pt[0]);
+      int trans_y = static_cast<int>(trans_pt[1]);
+      image->at<cv::Vec3b>(trans_y, trans_x) =
+          image_mat_backup_.at<cv::Vec3b>(i, j);
+      paint_mask_[trans_y][trans_x] = 1;
+    }
+  }
+  FillHole(image);
 }
 
 void BaseImageWarping::FillHole(cv::Mat *image) {

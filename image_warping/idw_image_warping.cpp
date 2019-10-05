@@ -15,37 +15,6 @@ IDWImageWarping::IDWImageWarping() {
 IDWImageWarping::~IDWImageWarping() {
 }
 
-void IDWImageWarping::WarpImage(cv::Mat *image) {
-  const int width = image->cols;
-  const int height = image->rows;
-
-  SolveOptimalLocalTransformations();
-
-  paint_mask_.clear();
-  paint_mask_.resize(height, std::vector<int>(width, 0));
-  image_mat_backup_ = image->clone();
-  image->setTo(cv::Scalar(255, 255, 255));
-
-  Eigen::Vector2f pt;
-  Eigen::Vector2f trans_pt;
-  for (int i = 0; i < height; ++i) {
-    for (int j = 0; j < width; ++j) {
-      pt[0] = j;
-      pt[1] = i;
-      trans_pt = GetTransformedPoint(pt);
-      if (!IsValidImagePoint(trans_pt, width, height)) {
-        continue;
-      }
-      int trans_x = static_cast<int>(trans_pt[0]);
-      int trans_y = static_cast<int>(trans_pt[1]);
-      image->at<cv::Vec3b>(trans_y, trans_x) =
-          image_mat_backup_.at<cv::Vec3b>(i, j);
-      paint_mask_[trans_y][trans_x] = 1;
-    }
-  }
-  FillHole(image);
-}
-
 Eigen::Vector2f IDWImageWarping::GetTransformedPoint(
     const Eigen::Vector2f &pt) {
   const int num_ctrl_pts = source_points_.size();
@@ -59,6 +28,10 @@ Eigen::Vector2f IDWImageWarping::GetTransformedPoint(
             local_trans_mat_list_[i] * (pt - source_points_[i]));
   }
   return trans_pt;
+}
+
+void IDWImageWarping::SolveTransformations() {
+  SolveOptimalLocalTransformations();
 }
 
 void IDWImageWarping::CalcWeights(const Eigen::Vector2f &pt) {
