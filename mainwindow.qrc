@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/MainWindow">
+        <file>resources/images/copy.png</file>
+        <file>resources/images/cut.png</file>
+        <file>resources/images/new.png</file>
+        <file>resources/images/open.png</file>
+        <file>resources/images/paste.png</file>
+        <file>resources/images/save.png</file>
+    </qresource>
+</RCC>
